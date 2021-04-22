@@ -1,0 +1,36 @@
+{% extends 'basetemplate.html' %}
+
+
+{% block title_body %}
+    <h1>Add Product</h1>
+{% endblock title_body %}
+{% block data_body %}
+
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="col-md-12">
+        <div class="col-md-4 mb-3">
+            <label for="validationServer01">Name Product</label>
+            <input type="text" class="form-control is-valid" id="validationServer01" placeholder="E.g. Clouds" required name='name'>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="validationServer02">Price Product</label>
+            <input type="text" class="form-control is-valid" id="validationServer02" placeholder="5000" required name="price">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="validationServer03">Brand</label>
+            <input type="text" class="form-control is-invalid" id="validationServer03" placeholder="Luuna" required name="brand">
+        </div>
+    <button class="btn btn-primary" type="submit">Submit form</button>
+</form class=" form-group">
+{% if messages %}
+    {% for message in messages  %}
+        {% if message.tags == success %}
+            <div class)="alert alert-success">{{message}}</div>
+        {% elif message.tags == error%}
+            <div class)="alert alert-danger">{{message}}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock data_body %}
