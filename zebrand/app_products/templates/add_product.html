@@ -7,8 +7,8 @@
 {% block data_body %}
 
 
-<form method="POST">
-    {% csrf_token %}
+<form action="/addProduct" method="POST">
+    {%csrf_token %}
     <div class="col-md-12">
         <div class="col-md-4 mb-3">
             <label for="validationServer01">Name Product</label>
