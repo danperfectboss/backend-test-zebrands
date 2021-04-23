@@ -1,0 +1,9 @@
+{% extends 'basetemplate.html' %}
+
+{% block data_body %}
+{% if permisos == True %}
+    <a href="{% url 'getAllAdmin' %}" class="btn btn-black">Users</a>
+{% endif %}
+    
+    <a href="{% url 'produc' %}" class="btn btn-black">Products</a>
+{% endblock data_body %}

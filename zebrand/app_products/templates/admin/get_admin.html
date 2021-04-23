@@ -1,0 +1,41 @@
+{% extends 'basetemplate.html' %}
+
+{% block title_body %}
+    <h1>All Admins</h1>
+{% endblock title_body %}
+
+{% block data_body %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name </th>
+      <th scope="col">NumEmpleado</th>
+      <th scope="col">Permission to CRUD</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for admin in admins %}
+        <tr>
+            <td>{{admin.name}}</td>
+            <td>{{admin.num_employee}}</td>
+            <td>{{admin.permissions}}</td>
+            <td>
+              <a href="/update_admin/{{admin.id}}" class="btn btn-warning">Update</a>
+              <a href="/delete_admin/{{admin.id}}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if messages %}
+    {% for message in messages  %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success col-md-4">{{message}}</div>
+        {% elif message.tags == 'error'%}
+            <div class="alert alert-danger col-md-4">{{message}}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock data_body %}
+

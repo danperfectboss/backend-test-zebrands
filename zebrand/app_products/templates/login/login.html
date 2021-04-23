@@ -1,0 +1,29 @@
+{% extends 'basetemplate.html' %}
+
+{% block data_body %}
+<div class="wrapper">
+    <div id="formContent">
+        <h3>Login Admin</h3>
+      <!-- Login Form -->
+        <form method="POST">
+          {% csrf_token %}
+            <input type="text" id="login" class="fadeIn second" name="usr" placeholder="login">
+            <br>
+            <input type="password" id="password" class="fadeIn third" name="pwd" placeholder="password">
+            <br>
+            <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
+    </div>
+  </div>
+
+  {% if messages %}
+    {% for message in messages  %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success col-md-4">{{message}}</div>
+        {% elif message.tags == 'error'%}
+            <div class="alert alert-danger col-md-4">{{message}}</div>
+        {% endif %}
+    {% endfor %}
+  {% endif %}
+  
+{% endblock data_body %}
