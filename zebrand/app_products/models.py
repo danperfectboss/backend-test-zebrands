@@ -8,8 +8,9 @@ class Product(models.Model):
     price = models.IntegerField()
     brand = models.CharField(max_length=300)
 
-class Employee(models.Model):
+class Admins(models.Model):
     name = models.CharField(max_length=100)
     permissons = models.BooleanField(default=False)
     num_employee = models.IntegerField() 
+    password = models.CharField(max_length=50)
 
