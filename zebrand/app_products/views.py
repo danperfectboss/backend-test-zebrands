@@ -7,7 +7,9 @@ from .validations.regex import validateParams
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 
-# Create your views here.
+
+
+######################## START Part for CRUD in PRODUCTS
 def index(request):
     pass
 
@@ -17,11 +19,6 @@ def login(request):
     else:
         return render('login/login.html')
 
-# # @require_http_methods(["GET"])
-# def add_product(request):
-#     return render(request,"add_product.html")
-
-# # @require_http_methods(["POST"])
 
 def add_data(request):
     return render(request, 'add_product.html')
@@ -49,23 +46,57 @@ def add_product(request):
         else: return HttpResponseBadRequest("Not today bro!")
 
 
-
-
 def get_products(request):
     products= Product.objects.all()
 
     return render(request,'get_products.html' ,{'all_products':products})
 
 def update_product(request,id_product):
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        brand = request.POST.get('brand')
+        # validate params for a kind of injection, sql or mongo inyection
+        if validateParams(name, price, brand) is False:
+            try:
+                product = Product.objects.get(sku=id_product)
+                product.name = name
+                product.price = price
+                product.brand = brand
+                product.save()
+                messages.success(request,"The Product was edited successfully")
+            except:
+                messages.error(request,"Error to edit the product")
+            
+            return HttpResponseRedirect("/update_products/"+str(id_product))
+
+        else: return HttpResponseBadRequest("Not today bro!")
+        
+    else:
+        if type(id_product) is int:
+            product = Product.objects.get(sku=id_product)
+            if product is None:
+                return HttpResponse("Product not found")
+            else:
+                return render(request, 'edit_product.html',{'product':product})
+            return HttpResponse(id_product)
+
+def delete_product(request,id_product):
     if type(id_product) is int:
         product = Product.objects.get(sku=id_product)
         if product is None:
             return HttpResponse("Product not found")
         else:
-            return render(request, 'edit_product.html',{'product':product})
-        return HttpResponse(id_product)
+            product.delete()
+            messages.error(request,"Product successfuly deleted")
+            
+            return  HttpResponseRedirect("/products")
 
-def delete_product(request,id_product):
-    print(id_product)    
-    return HttpResponse(id_product)
 
+######################## ENDS Part for CRUD in PRODUCTS
+
+
+######################## START Part for CRUD in ADMINS
+
+######################## START Part for CRUD in ADMINS
