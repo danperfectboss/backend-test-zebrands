@@ -15,7 +15,7 @@ def login(request):
     if request == 'POST':
         pass
     else:
-         return render('login/login.html')
+        return render('login/login.html')
 
 # # @require_http_methods(["GET"])
 # def add_product(request):
@@ -46,8 +46,26 @@ def add_product(request):
             
             return HttpResponseRedirect("/addData")
 
-        else: return HttpResponseBadRequest("No bro")
+        else: return HttpResponseBadRequest("Not today bro!")
 
 
-def update_product(request):
-    pass
+
+
+def get_products(request):
+    products= Product.objects.all()
+
+    return render(request,'get_products.html' ,{'all_products':products})
+
+def update_product(request,id_product):
+    if type(id_product) is int:
+        product = Product.objects.get(sku=id_product)
+        if product is None:
+            return HttpResponse("Product not found")
+        else:
+            return render(request, 'edit_product.html',{'product':product})
+        return HttpResponse(id_product)
+
+def delete_product(request,id_product):
+    print(id_product)    
+    return HttpResponse(id_product)
+
