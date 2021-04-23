@@ -7,7 +7,7 @@
 {% block data_body %}
 
 
-<form action="/editProduct" method="POST">
+<form method="POST">
     {%csrf_token %}
     <div class="col-md-12">
         <div class="col-md-4 mb-3">
@@ -23,5 +23,17 @@
             <input type="text" class="form-control is-invalid" id="validationServer03" value={{product.brand}} placeholder="Luuna" required name="brand">
         </div>
     <button class="btn btn-primary" type="submit">Submit form</button>
+</form class=" form-group">
+
+
+{% if messages %}
+    {% for message in messages  %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success col-md-4">{{message}}</div>
+        {% elif message.tags == 'error'%}
+            <div class="alert alert-danger col-md-4">{{message}}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
 {% endblock data_body %}
