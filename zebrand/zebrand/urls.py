@@ -27,7 +27,8 @@ urlpatterns = [
     path('delete_products/<int:id_product>',views.delete_product, name="deleteProduct" ),
     #login
     path('',views.login, name="login" ),
-    path('options',views.options, name="option" ),
+    path('logout',views.logout, name="Out"),
+    path('options',views.options, name="option"),
     #Admin
     path('create_admin',views.create_admin, name="createAdmin" ),
     path('show_admin',views.show_admin, name="getAllAdmin" ),
