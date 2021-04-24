@@ -3,9 +3,9 @@
 
 {% block title_body %}
     <h1>Edit Product</h1>
+    <a href="{% url 'produc' %}"><img style="max-height: 50px;" src="https://icon-library.com/images/html-home-icon/html-home-icon-6.jpg" alt=""></a>
 {% endblock title_body %}
 {% block data_body %}
-
 
 <form method="POST">
     {%csrf_token %}

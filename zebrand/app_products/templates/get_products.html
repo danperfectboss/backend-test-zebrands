@@ -2,6 +2,7 @@
 
 {% block title_body %}
     <h1>All Products</h1>
+    <a href="{% url 'option' %}"><img style="max-height: 50px;" src="https://icon-library.com/images/html-home-icon/html-home-icon-6.jpg" alt=""></a>
 {% endblock title_body %}
 
 {% block data_body %}
@@ -12,7 +13,9 @@
       <th scope="col">Name Product</th>
       <th scope="col">Price</th>
       <th scope="col">Brand</th>
-      <th scope="col">Actions</th>
+      {% if canEdit == True %}
+        <th scope="col">Actions</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -22,14 +25,20 @@
             <td>{{products.name}}</td>
             <td>{{products.price}}</td>
             <td>{{products.brand}}</td>
-            <td>
-              <a href="/update_products/{{products.sku}}" class="btn btn-warning">Update</a>
-              <a href="/delete_products/{{products.sku}}" class="btn btn-danger">Delete</a>
-            </td>
+            {% if canEdit == True %}  
+              <td>
+                <a href="/update_products/{{products.sku}}" class="btn btn-warning">Update</a>
+                <a href="/delete_products/{{products.sku}}" class="btn btn-danger">Delete</a>
+              </td>
+            {% endif %}
         </tr>
     {% endfor %}
   </tbody>
+  
 </table>
+{% if canEdit == True %}  
+  <a href="{% url 'addProduct' %}" class="btn">add Product</a>
+{% endif %}
 {% if messages %}
     {% for message in messages  %}
         {% if message.tags == 'success' %}

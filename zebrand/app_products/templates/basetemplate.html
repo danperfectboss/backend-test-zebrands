@@ -12,6 +12,10 @@
 
 </head>
 <body>
+    {% if hide != True%}
+        <a href="{% url 'Out' %}" class="btn btn-dark">Logout</a>
+    {% endif %}
+    
     {% block title_body %}
     {% endblock title_body %}
     {% block data_body %}

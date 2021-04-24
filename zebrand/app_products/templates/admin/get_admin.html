@@ -2,6 +2,7 @@
 
 {% block title_body %}
     <h1>All Admins</h1>
+    <a href="{% url 'option' %}"><img style="max-height: 50px;" src="https://icon-library.com/images/html-home-icon/html-home-icon-6.jpg" alt=""></a>
 {% endblock title_body %}
 
 {% block data_body %}
@@ -28,6 +29,7 @@
     {% endfor %}
   </tbody>
 </table>
+<a href="{% url 'createAdmin' %}" class="btn">add Admin</a>
 {% if messages %}
     {% for message in messages  %}
         {% if message.tags == 'success' %}
