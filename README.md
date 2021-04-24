@@ -24,7 +24,8 @@ Se usaron notificaciones en un canal de Telegram el link para poder unirse a dic
 
 
 Instrucciones:
-Ubicarse en la carpeta "backend-test-zebrands/zebrand" y ejecutar el comando python manage.py runserver para iniciar el proyecto.
+Ubicarse en la carpeta "backend-test-zebrands/zebrand" y ejecutar el comando pip install -r requirement.txt para instalar los paquetes necesarios para el funcionamiento del proyecto.
+Se ejecuta el comando python manage.py runserver para iniciar el proyecto.
 
 Este se podra visualizar desde el navegador en la ruta http://127.0.0.1:8000
 
