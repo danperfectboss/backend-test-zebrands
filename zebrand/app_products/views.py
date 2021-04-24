@@ -6,6 +6,7 @@ from .models import *
 from .validations.regex import validateParams
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+from .telegram.messages import MessageTelegram
 
 
 
@@ -16,9 +17,9 @@ def add_data(request):
     return render(request, 'add_product.html')
 
 def add_product(request):
-    
+    #validate if a session exist, if not put false to the session an redirect to login
     if request.session.get("edit",False):
-
+        #validate the method http
         if request.method != 'POST':
             return HttpResponseRedirect("/add_data")
         else:
@@ -29,6 +30,7 @@ def add_product(request):
             # validate params for a kind of injection, sql or mongo inyection
             if validateParams(name, price, brand) is False:
                 try:
+                    #assigns the parameters to the object model for save the data
                     product = Product(name= name, price=price, brand= brand)
                     product.save()
                     messages.success(request,"The Product was added successfully")
@@ -36,18 +38,23 @@ def add_product(request):
                     messages.error(request,"Error to add the product")
                 
                 return HttpResponseRedirect("/add_data")
-
+            # if a parameter contains some inusual redirect to this message
             else: return HttpResponseBadRequest("Not today bro!")
 
     else: return HttpResponseRedirect("/")
 
 def get_products(request):
+    # get all element in the data base
     products= Product.objects.all()
 
-    return render(request,'get_products.html' ,{'all_products':products})
+    #assing the value forn the session variable for pass to frontend
+    canEdit= request.session['edit']
+
+    return render(request,'get_products.html',{'all_products':products, 'canEdit':canEdit})
 
 def update_product(request,id_product):
 
+    #validate if a session exist, if not put false to the session an redirect to login
     if request.session.get("edit",False):
         if request.method == 'POST':
             name = request.POST.get('name')
@@ -56,11 +63,19 @@ def update_product(request,id_product):
             # validate params for a kind of injection, sql or mongo inyection
             if validateParams(name, price, brand) is False:
                 try:
+                    #Put the parameter into the object product
                     product = Product.objects.get(sku=id_product)
                     product.name = name
                     product.price = price
                     product.brand = brand
+                    #and save it
                     product.save()
+                    #create the variable that contains the text who edit these product
+                    text= "The Employee No. {} modify the product with sku {}".format(request.session['noemplo'],id_product)
+                           
+                    #call the function for send the message to telegram chanel
+                    MessageTelegram(text).sendMessage()
+                    #send message to fronend
                     messages.success(request,"The Product was edited successfully")
                 except:
                     messages.error(request,"Error to edit the product")
@@ -70,22 +85,28 @@ def update_product(request,id_product):
             else: return HttpResponseBadRequest("Not today bro!")
             
         else:
+            #if the request is get response with the product equals to id_product parameter
             if type(id_product) is int:
                 product = Product.objects.get(sku=id_product)
+                #if don't exist the id in the database return a error message
                 if product is None:
                     return HttpResponse("Product not found")
                 else:
+                    # return the product queried the database
                     return render(request, 'edit_product.html',{'product':product})
                 
     else: return HttpResponseRedirect("/")
 
 def delete_product(request,id_product):
     if request.session.get("edit",False):
+        #verified the type of the variable to follow with delete product
         if type(id_product) is int:
+            #get the element by id of product
             product = Product.objects.get(sku=id_product)
             if product is None:
                 return HttpResponse("Product not found")
             else:
+                #delete  the product
                 product.delete()
                 messages.error(request,"Product successfuly deleted")
                 
@@ -168,7 +189,7 @@ def show_admin(request):
 def delete_admin(request, id_admin):
     if request.session.get("edit",False):
         if type(id_admin) is int:
-            admin = Admins.objects.get(sku=id_admin)
+            admin = Admins.objects.get(id =id_admin)
             if admin is None:
                 return HttpResponse("admin not found")
             else:
@@ -184,14 +205,17 @@ def delete_admin(request, id_admin):
 def login(request):
     
     if request.method == 'POST':
+        #get the parameter from de frontend
         user = request.POST.get('usr')
         psw = request.POST.get('pwd')
         if validateParams(user, psw) is False:
             try:
+                # If exist some admin with the same info joined, assing the values to session variables
                 admin = Admins.objects.get(name=user,password= psw )
                 
                 request.session['edit'] = admin.permissions
                 request.session['user'] = admin.id
+                request.session['noemplo'] = admin.num_employee
                 
                 return HttpResponseRedirect("/options")
             
@@ -205,13 +229,20 @@ def login(request):
         else: return HttpResponseBadRequest("Not today bro!")
         
     else:
-        return render(request, 'login/login.html')
+        return render(request, 'login/login.html',{'hide':True})
 
+def logout(request):
+    #validate the sessions and destroy it
+    if request.session.get("edit",False):
+        del request.session["edit"]
 
+    if request.session.get("user",False):
+        del request.session["user"]
+
+    return HttpResponseRedirect("/")
 
 def options(request):
-
+    # Just show the only two options in the frontend
     permisos=request.session['edit']
 
-    id= request.session['user']
     return render(request,'options.html',{'user':id, 'permisos':permisos })
